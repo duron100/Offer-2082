@@ -24,12 +24,28 @@
         .live-toast { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.85); color: white; padding: 12px 20px; border-radius: 50px; font-size: 12px; z-index: 1000; transform: translateY(150%); transition: 0.5s; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.1); }
         .loader { border: 3px solid #f3f3f3; border-top: 3px solid #f85606; border-radius: 50%; width: 22px; height: 22px; animation: spin 1s linear infinite; display: inline-block; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .prize-badge { background: #fff5f0; border: 1px solid #f85606; padding: 10px; border-radius: 15px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
     <div id="landing-page" class="max-w-2xl mx-auto py-12 px-6 text-center">
+        <div class="mb-4 inline-block bg-black text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest animate-pulse">
+            Event Ends In: <span id="timer">7d 12h 30m 00s</span>
+        </div>
+
         <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-tighter uppercase">DARAZ <span class="daraz-orange">EXCLUSIVE 2082</span></h1>
+        
+        <div class="prize-badge text-left">
+            <h4 class="font-black text-sm daraz-orange uppercase mb-2">🎁 Grand Prizes Available:</h4>
+            <div class="grid grid-cols-2 gap-2 text-[11px] font-bold">
+                <span>💻 Apple MacBook Air M2 (x5)</span>
+                <span>💰 Rs. 15000 Cash (x10)</span>
+                <span>💰 Rs. 5000 Cash (x20)</span>
+                <span>🎧 AirPods Pro (x50)</span>
+            </div>
+        </div>
+
         <div class="text-left bg-white p-8 rounded-3xl shadow-sm border mb-8 space-y-4 text-[13px] leading-relaxed">
             <h3 class="font-black text-xl border-b pb-2 mb-4 uppercase tracking-tighter daraz-orange">Tournament Rules & Policy</h3>
             <p><strong>1. Eligibility:</strong> Open only to verified residents of Nepal aged 18 or above.</p>
@@ -219,6 +235,25 @@
             }
         }
 
+       // --- NEW UPDATED TIMER SCRIPT (Days, Hrs, Mins, Secs) ---
+        // Set seconds to 7 days, 12 hours, 30 mins
+        let totalSeconds = (7 * 24 * 60 * 60) + (12 * 60 * 60) + (30 * 60);
+
+        setInterval(() => {
+            if (totalSeconds <= 0) return;
+
+            let days = Math.floor(totalSeconds / (24 * 60 * 60));
+            let hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+            let mins = Math.floor((totalSeconds % (60 * 60)) / 60);
+            let secs = totalSeconds % 60;
+
+            document.getElementById('timer').innerText = 
+                `${days}d ${hours}h ${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
+            
+            totalSeconds--;
+        }, 1000);
+        
+
         // FAKE TOAST LOGIC
         const names = ["Nabin M.", "Sita K.", "Rajesh H.", "Prakash T.", "Deepa G.", "Bimal P.", "Roji B."];
         const cities = ["Kathmandu", "Nawalpur", "Siraha", "Biratnagar", "Chitwan", "Dharan", "Nepalgunj"];
@@ -238,7 +273,10 @@
         }, 6000);
     </script>
 </body>
-</html>
+                </html>
 
+
+
+    
 
 
